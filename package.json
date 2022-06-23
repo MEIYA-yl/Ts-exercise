@@ -1,15 +1,15 @@
 {
-	"script": {
-		"commit": "git-cz"
-	},
-	"config": {
-		"commitizen": {
-			"path": "node_modules/cz-customizable"
-		}
-	},
-	"devDependencies": {
-		"commitizen": "^4.2.4",
-		"cz-conventional-changelog": "^3.3.0",
-		"cz-customizable": "^6.3.0"
-	}
+  "scripts": {
+    "commit": "git add . && git-cz"
+  },
+  "config": {
+    "commitizen": {
+      "path": "node_modules/cz-conventional-changelog"
+    }
+  },
+  "devDependencies": {
+    "commitizen": "^4.2.4",
+    "cz-conventional-changelog": "^3.3.0",
+    "cz-customizable": "^6.3.0"
+  }
 }
