@@ -5,6 +5,42 @@
  * 3. 未知类型合理的使用是unknown类型的变量；
  */
 
+// declare 声明的结构不在运行时中。
+
+// Tip override 关键字，用来确保在作为派生类中尝试覆盖的方法一定在基类中存在；
+class Base {
+  printWithLove() {}
+  print() {}
+}
+
+class Derived extends Base {
+  override print() {
+    // 若 print 函数不存在 会因为基类中不存在改写的方法，TS 会进行错误提示
+  }
+}
+
+// Tip abstract 声明抽象类。描述了一个类中应该有哪些成员（属性、方法），一个抽象方法描述了这一方法在实际实现中的结构。
+abstract class AbsFun {
+  // 抽象类使用 abstract 进行声明
+  static t: string;
+  constructor() {}
+  abstract absProps: unknown[]; // 抽象类成员同样需要通过 abstract 进行声明
+  abstract get absGetter(): string;
+}
+
+class Foo implements AbsFun {
+  // 通过 implements 来实现抽象类，且必须完全实现这个抽象类中的所有成员。但无法声明静态的抽象成员。
+  absProps: string[] = ["asdfasf"];
+
+  get absGetter() {
+    return "adsfasfs";
+  }
+
+  absMethod(name: string) {
+    return name;
+  }
+}
+
 // Tip 类型断言就是将变量的已有类型更改为新指定类型（指鹿为马）
 function t(union: string | number) {
   if ((union as string).includes("asdf")) {
