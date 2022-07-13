@@ -73,4 +73,20 @@ Fn.func!().prop?.toFixed();
   )().prop as number
 ).toFixed();
 
-// Tip
+// Tip 通过类型断言，可以在保留类型提示的前提下，不完整的实现类型结构。
+interface IStruct {
+  foo: string;
+  bar: {
+    barPropA: string;
+    barPropB: number;
+    barMethod: () => void;
+    baz: {
+      handler: () => Promise<void>;
+    };
+  };
+}
+
+const obj = <IStruct>{
+  bar: {},
+  // foo: 134, // 当程序中存在错误的实现时，依旧可以提供报错信息
+};
