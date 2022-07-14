@@ -139,3 +139,13 @@ interface Foo {
 // Tip 索引类型访问
 // 索引类型访问的本质：通过键的字面量类型访问这个键对应的键值类型
 type PropTypeUnion = IStruct[keyof IStruct];
+
+// Tip 映射类型 in：类型编程的第一步
+type Stringify<T> = {
+  [k in keyof T]: string;
+}; // 基于键名映射到键值类型
+
+// 小拓展：通过映射的方式拿到键对应的值类型
+type Clone<T> = {
+  [k in keyof T]: T[k];
+};
