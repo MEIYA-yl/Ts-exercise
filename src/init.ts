@@ -1,2 +1,1 @@
-
-console.log('init project！');
+console.log("init project！");

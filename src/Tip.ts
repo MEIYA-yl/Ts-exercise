@@ -5,6 +5,8 @@
  * 3. 未知类型合理的使用是unknown类型的变量；
  */
 
+// | 联合取并集，& 交叉取交集
+
 // declare 声明的结构不在运行时中。
 
 // Tip override 关键字，用来确保在作为派生类中尝试覆盖的方法一定在基类中存在；
@@ -48,7 +50,7 @@ function t(union: string | number) {
   if ((union as number).toFixed() === "1321") {
   }
 }
-// 双重断言
+// 双重断言：防止在断言的过程中无法过渡导致报错，可以使用双重断言进行过渡。
 const str: string = "asdfda";
 `(str as { handler: () => {} }).hanlder()`; // TS-err: 从 n 到 m 类型的断言可能是错误的
 
@@ -90,3 +92,16 @@ const obj = <IStruct>{
   bar: {},
   // foo: 134, // 当程序中存在错误的实现时，依旧可以提供报错信息
 };
+
+// Tip 工具类型：类型别名接受泛型之后就成为了工具类型
+type maybeNull<NewType> = NewType | null; // 联合类型中的 null 确保了处理可能为空值的属性和方法的调用
+
+// 在使用工具类型来做类型标注 通常是再度声明一个新的类型别名
+type FactoryWidthBool = maybeNull<boolean>;
+const f: FactoryWidthBool = true;
+// 处理方法调用
+function method(input: maybeNull<{ handler: () => {} }>) {
+  input?.handler();
+}
+
+// Tip 索引类型
