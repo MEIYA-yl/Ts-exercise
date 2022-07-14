@@ -105,3 +105,37 @@ function method(input: maybeNull<{ handler: () => {} }>) {
 }
 
 // Tip 索引类型
+// 索引类型包括三个部分：索引签名类型（声明）、索引类型查询（读取）、索引类型访问（读取）
+
+interface AllStringTypes {
+  [key: string]: string; // 导致只能声明字符串类型的键
+} // 键值一致的类型结构
+
+type propT1 = AllStringTypes["zhangsan"];
+type propT2 = AllStringTypes[1234]; // js 中会将数字索引访问转换为字符串索引访问
+
+const objTypes: AllStringTypes = {
+  name: "zhangsan",
+  22: "age",
+  [Symbol("sym")]: "symbol",
+  // 13: 145, // 具体类型和索引类型并存时，具体类型需要和索引类型保持一致
+};
+
+// Tip 索引类型重构js代码场景：为内部属性较多的对象声明一个any的索引类型签名
+interface AnyTypeHere {
+  [key: string]: any; // 通过any 以此来暂时支持对类型未明确属性的访问
+}
+
+// Tip 索引类型查询
+type fooKeys = keyof any; // keyof 的产物必定是一个联合类型
+
+// 模拟从 键名到联合类型 的过程
+interface Foo {
+  lisi: "lisi";
+  22: 22;
+}
+// type Fookeys = Object.keys(Foo).join('|')
+
+// Tip 索引类型访问
+// 索引类型访问的本质：通过键的字面量类型访问这个键对应的键值类型
+type PropTypeUnion = IStruct[keyof IStruct];
