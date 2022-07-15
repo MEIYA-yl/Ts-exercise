@@ -149,3 +149,12 @@ type Stringify<T> = {
 type Clone<T> = {
   [k in keyof T]: T[k];
 };
+
+// Tip 类型的安全保障：类型查询操作符 - typeof
+const func = (input: string): number => {
+  return input.length;
+};
+
+type FuncReturnType = ReturnType<typeof func>; // 会返回一个函数类型中返回值的类型
+// 类型查询操作符后不允许使用 ‘表达式’ ，不用担心与JS中的定义相冲突。
+// let isValid: typeof func('asdf')
