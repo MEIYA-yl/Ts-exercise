@@ -230,3 +230,27 @@ function handle1(input: Foo | Far) {
     input.farOnly;
   }
 }
+
+// Tip assert 类型断言守卫
+// 通过断言的值类型不满足目标类型，那么在断言之后的代码就不会被执行。
+// 相反，如果断言通过，不管最开始是何类型，断言后的代码中就一定都是符合断言类型的类型。
+
+function assert(condition: any, msg?: string): asserts condition {
+  if (!condition) {
+    throw new Error("msg");
+  }
+} // assert 方法签名：将 condition 所对应的类型作为类型层面判断的依据。
+
+// 通过 is 类型守卫的结合，使类型守卫的能力更加健全。
+let name: any = "zhangsan";
+// const a = typeof name
+function assertIsNumber(val: any): asserts val is number {
+  if (typeof val !== "number") {
+    throw new Error("Not a number!");
+  }
+}
+
+assertIsNumber(name);
+
+// number 类型！
+name.toFixed();
