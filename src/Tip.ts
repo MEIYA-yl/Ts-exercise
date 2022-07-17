@@ -147,7 +147,7 @@ type Stringify<T> = {
 
 // 小拓展：通过映射的方式拿到键对应的值类型
 type Clone<T> = {
-  [k in keyof T]: T[k];
+  [k in keyof T]: T[k]; // key in object 的方式来判断 key 是否存在于 object 或其原型链上
 };
 
 // Tip 类型的安全保障：类型查询操作符 - typeof
@@ -159,7 +159,7 @@ type FuncReturnType = ReturnType<typeof func>; // 会返回一个函数类型中
 // 类型查询操作符后不允许使用 ‘表达式’ ，不用担心与JS中的定义相冲突。
 // let isValid: typeof func('asdf')
 
-// Tip 类型守卫：类型的空值流分析
+// Tip 类型守卫：类型的控值流分析
 // Ts 的类型控制流不能做到跨函数上下文进行类型的信息收集。
 function isString(input: unknown): input is string {
   // is + 预期类型
@@ -185,3 +185,48 @@ const isFalsy = (val: unknown): val is Falsy => !val;
 export type Primitive = string | number | boolean | undefined; // 不包括不常用的 symbol 和 bigint
 const isPrimitive = (val: unknown): val is Primitive =>
   ["string", "number", "boolean", "undefined"].includes(typeof val);
+
+// Tip 基于 in 与 instanceof 的类型保护
+class FunBase {}
+
+class BarBase {}
+
+class Fun extends FunBase {
+  funOnly() {}
+}
+class Bar extends BarBase {
+  barOnly() {}
+}
+
+function handle(input: Fun | Bar) {
+  if (input instanceof FunBase) {
+    // 通过 instanceof 进行类型保护的理念，可以认为它在JS中的语法概念
+    input.funOnly();
+  } else {
+    input.barOnly();
+  }
+}
+
+const fun = new Fun();
+handle(fun);
+
+// 类似的 我们在使用 in 操作符时也是类似。
+// in 它更多的是解决 typeof 不能在处理不同接口时遇到的同名属性的问题。
+
+interface Foo {
+  kind: "foo";
+  fooOnly: number; // 可辨识属性
+}
+
+interface Far {
+  kind: "bar";
+  farOnly: number; // 可辨识属性
+}
+
+function handle1(input: Foo | Far) {
+  if (input.kind === "foo") {
+    input.fooOnly;
+  } else if (input.farOnly in input) {
+    input.farOnly;
+  }
+}
