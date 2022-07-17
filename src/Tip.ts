@@ -158,3 +158,30 @@ const func = (input: string): number => {
 type FuncReturnType = ReturnType<typeof func>; // 会返回一个函数类型中返回值的类型
 // 类型查询操作符后不允许使用 ‘表达式’ ，不用担心与JS中的定义相冲突。
 // let isValid: typeof func('asdf')
+
+// Tip 类型守卫：类型的空值流分析
+// Ts 的类型控制流不能做到跨函数上下文进行类型的信息收集。
+function isString(input: unknown): input is string {
+  // is + 预期类型
+  // 如果函数返回值符合预期类型，那么 is 关键字前这个入参的类型，就会被这个类型守卫调用方后续的类型控制流分析收集到。
+  return typeof input === "string";
+} // isString 被称为类型守卫
+
+function foo(input: string | number) {
+  if (isString(input)) {
+    // 类型守卫函数中 不会对判断逻辑和实际逻辑的关联进行检查
+    input.replace("linbudu", "linbudu599");
+  }
+  if (typeof input === "number") {
+  }
+  // ...
+}
+// foo(1234);
+
+// 常用的两个守卫
+export type Falsy = false | "" | 0 | null | undefined;
+const isFalsy = (val: unknown): val is Falsy => !val;
+
+export type Primitive = string | number | boolean | undefined; // 不包括不常用的 symbol 和 bigint
+const isPrimitive = (val: unknown): val is Primitive =>
+  ["string", "number", "boolean", "undefined"].includes(typeof val);
