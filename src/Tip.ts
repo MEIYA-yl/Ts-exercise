@@ -5,9 +5,18 @@
  * 3. 未知类型合理的使用是unknown类型的变量；
  */
 
+// Tip 如何获取枚举的所有值或者所有的键 ？
+// 枚举也是对象，因此使用 Obejct.keys/values 就行，类型层面的话，可以type K = keyof typeof UserType 拿到枚举Key的联合类型，但是值类型的话就不行了，type V = UserType[keyof UserType] 会拿到枚举所有的属性与方法的类型（包括内置方法的）
+
 // | 联合取并集，& 交叉取交集
 
-// declare 声明的结构不在运行时中。
+// Tip declare 声明的结构不在运行时中，用来定义全局变量、全局函数、全局命名空间、js modules、class等。
+// declare global 为全局对象window增加的新属性。
+declare global {
+  interface Window {
+    mesage: string;
+  }
+}
 
 // Tip override 关键字，用来确保在作为派生类中尝试覆盖的方法一定在基类中存在；
 class Base {
